@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { findPets } from "../../services/PetServices";
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 
 
 
 function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, }) {
+
     const count = preGlobalFilteredRows.length
     const [value, setValue] = React.useState(globalFilter)
     const onChange = useAsyncDebounce(value => {
@@ -47,47 +49,35 @@ function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, })
   
 
 
-function BondDataFull() {
+function BondData() {
 
-    const data = React.useMemo(
-        () => [
-            
-        //  {isin: "XS1988387210", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1000", unit_price: "90", coupon_pct: "4.37", 
-        //   quantity: "50", type: "CORP", trade_date: "13/05/2021", trade_type: "buy", trade_curr: "USD", trade_settle_date: "04/08/2021", status: "open"},
-        //  {isin: "XS1988387210", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1000", unit_price: "90", coupon_pct: "4.37", 
-        //  quantity: "50", type: "CORP", trade_date: "13/05/2021", trade_type: "buy", trade_curr: "USD", trade_settle_date: "04/08/2021", status: "open"},
-        //  {isin: "XS1988387210", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1000", unit_price: "90", coupon_pct: "4.37", 
-        //   quantity: "50", type: "CORP", trade_date: "13/05/2021", trade_type: "buy", trade_curr: "USD", trade_settle_date: "04/08/2021", status: "open"},
-        //  {isin: "XS1988387210", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1000", unit_price: "90", coupon_pct: "4.37", 
-        //  quantity: "50", type: "CORP", trade_date: "13/05/2021", trade_type: "buy", trade_curr: "USD", trade_settle_date: "04/08/2021", status: "open"},
-        {isin: "XS1988387210", cusip: "", maturity: "04/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1000",},
-       {isin: "XS1988387211", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "BZ Holdings Inc", book_name: "Trading_book_2", bond_currency: "USD", face_value: "9000", },
-       {isin: "XS1988387212", cusip: "", maturity: "05/09/2021", issuer: "Facebook Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_2", bond_currency: "USD", face_value: "8000",},
-      {isin: "XS1988387210", cusip: "", maturity: "05/08/2021", issuer: "Microsoft Corp", bond_holder: "AZ Holdings Inc", book_name: "Trading_book_1", bond_currency: "USD", face_value: "1100", },
-        //  {isin: 'XS1988387210', type: 'CORP', issuer: 'Microsoft Corp', maturity: '05/08/21', face_value: "90"},
-        //  {isin: 'XS1988387211', type: 'CORP', issuer: 'Other Corp', maturity: '05/08/21', face_value: "100"},
-        //  {isin: 'XS1988387212', type: 'CORP', issuer: 'Face Corp', maturity: '04/08/21', face_value: "980"},
-        //  {isin: 'XS1988387210', type: 'CORP', issuer: 'Microsoft Corp', maturity: '04/08/21', face_value: "90"},
-        //  {isin: 'XS1988387211', type: 'CORP', issuer: 'Other Corp', maturity: '05/07/21', face_value: "100"},
-        //  {isin: 'XS1988387212', type: 'CORP', issuer: 'Face Corp', maturity: '05/07/21', face_value: "980"}
+    const [pets, setPets] = useState([]);
 
-         //{isin: , cusip: , maturity: , issuer: , bond_holder: , book_name: , bond_currency: , face_value: , unit_price: , coupon_pct: , 
-         //  quantity: , type: , trade_date: , trade_type: , trade_curr: , trade_settle_date: , status: }}
-        ],
-        []
-    )
+    useEffect(() => {
+        findPets().then(({data}) => {
+            setPets(data);
+        });
+        console.log(pets)
+        console.log(setPets)
+    }, []);
+
+    const data = pets
+                
+    //{isin: , cusip: , maturity: , issuer: , bond_holder: , book_name: , bond_currency: , face_value: , unit_price: , coupon_pct: , 
+    //  quantity: , type: , trade_date: , trade_type: , trade_curr: , trade_settle_date: , status: }}
+       
    
     const columns = React.useMemo(
         () => [
           // accessor is the "key" in the data
           { Header: 'isin', accessor: 'isin' },
           { Header: 'cusip', accessor: 'cusip' },
-          { Header: 'maturity', accessor: 'maturity' },
-          { Header: 'issuer', accessor: 'issuer' },
+          { Header: 'maturity', accessor: 'bond_maturity_date' },
+          { Header: 'issuer', accessor: 'issuer_name' },
           { Header: 'bond holder', accessor: 'bond_holder' },
           { Header: 'book name', accessor: 'book_name' },
           { Header: 'bond currency', accessor: 'bond_currency' },
-          { Header: 'face value', accessor: 'face_value' },
+        //   { Header: 'face value', accessor: 'face_value' },
         //   { Header: 'unit price', accessor: 'unit_price' },
         //   { Header: 'coupon %', accessor: 'coupon_pct' },
         //   { Header: 'quantity', accessor: 'quantity' },
@@ -187,4 +177,4 @@ function BondDataFull() {
     );
    }
    
-export default BondDataFull;
+export default BondData;
