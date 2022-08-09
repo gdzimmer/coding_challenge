@@ -63,25 +63,19 @@ export function dateBetweenFilterFn(rows, id, filterValues) {
       var hour = dateAndHour[1];
       const [day, month, year] = r.values[id].split('/');
       const date = new Date(+year, +month - 1, +day);
-      var formattedData = date + " " + hour;
-
-      // var [day, month, year] = dateAndHour[0].split("-");
-      // var date = [day, month, year].join("/");
-      var hour = dateAndHour[1];
-      var formattedData = date + " " + hour;
+      // var formattedData = date + " " + hour;
+      // var hour = dateAndHour[1];
+      // var formattedData = date + " " + hour;
       
-        // const [day, month, year] = record.bond_maturity_date.split('/');
-        // const date = new Date(+year, +month - 1, +day);
-        // pets.bond_maturity_date = date
-        // console.log(date); 
-
-      console.log("Formatted : " + formattedData)
-      const cellDate = new Date(formattedData);
-
+      // console.log("Formatted : " + formattedData)
+      // const cellDate = new Date(formattedData);
+      const cellDate = date
+      
       console.log("START : " + sd)
       console.log("END : " + ed)
 
       if (ed && sd) {
+        console.log("CELLDATE: " + cellDate);
         return cellDate >= sd && cellDate <= ed;
       } else if (sd) {
         console.log("IS GREATER")
@@ -184,7 +178,7 @@ function BondData() {
           { Header: 'isin', accessor: 'isin' },
           { Header: 'cusip', accessor: 'cusip' },
           { Header: 'maturity', accessor: 'bond_maturity_date', 
-          Filter: DateRangeColumnFilter, filter: dateBetweenFilterFn },
+             Filter: DateRangeColumnFilter, filter: dateBetweenFilterFn },
           { Header: 'issuer', accessor: 'issuer_name' },
           { Header: 'bond holder', accessor: 'bond_holder' },
           // { Header: 'book name', accessor: 'book_name' },
@@ -206,7 +200,7 @@ function BondData() {
     const defaultColumn = React.useMemo(
       () => ({
         // Let's set up our default Filter UI
-        Filter: DefaultColumnFilter, DateRangeColumnFilter, dateBetweenFilterFn
+        Filter: DefaultColumnFilter, DateRangeColumnFilter,
       }),
       []
     )
